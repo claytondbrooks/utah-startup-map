@@ -1,6 +1,11 @@
 'use client';
+
 import dynamic from 'next/dynamic';
-const UtahMap = dynamic(() => import('@/components/UtahMap'), { ssr: false });
+
+// Import the client-only wrapper, not UtahMap directly
+const MapWrapper = dynamic(() => import('@/components/MapWrapper'), {
+  ssr: false,
+});
 
 export default function Home() {
   return (
@@ -19,7 +24,7 @@ export default function Home() {
           Utah Startup Map
         </h1>
         <p style={{ fontSize: '1.125rem', color: '#4A5568', marginTop: '0.5rem' }}>
-          Explore Utah’s startup ecosystem. Hover map markers for names.
+          Explore Utah’s tech startup ecosystem. Hover map markers for info.
         </p>
       </div>
 
@@ -32,7 +37,8 @@ export default function Home() {
           margin: '0 auto',
         }}
       >
-        <UtahMap />
+        {/* Use MapWrapper here */}
+        <MapWrapper />
       </div>
     </main>
   );

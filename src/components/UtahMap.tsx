@@ -16,7 +16,7 @@ import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
-// Patch icon paths
+// Fix marker icons
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -24,12 +24,6 @@ L.Icon.Default.mergeOptions({
   iconUrl: markerIcon.src,
   shadowUrl: markerShadow.src,
 });
-
-const companies = [
-  { name: 'FrameVC', location: [40.6333, -111.8139] },
-  { name: 'Halda.AI', location: [40.2264, -111.6611] },
-  { name: 'Vector', location: [40.4835, -111.8925] },
-];
 
 function ResizeFixer() {
   const map = useMap();
@@ -39,7 +33,11 @@ function ResizeFixer() {
   return null;
 }
 
-export default function UtahMap() {
+export default function UtahMap({
+  companies,
+}: {
+  companies: { id: string; name: string; hq_lat: number; hq_lon: number }[];
+}) {
   const center: LatLngExpression = [39.5, -111.5];
 
   return (
@@ -54,9 +52,12 @@ export default function UtahMap() {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution="© OpenStreetMap contributors"
       />
-      {companies.map((company, idx) => (
-        <Marker key={idx} position={company.location as LatLngExpression}>
-          <Tooltip>{company.name}</Tooltip>
+      {companies.map((c) => (
+        <Marker
+          key={c.id}
+          position={[c.hq_lat, c.hq_lon] as LatLngExpression}
+        >
+          <Tooltip>{c.name}</Tooltip>
         </Marker>
       ))}
     </MapContainer>
