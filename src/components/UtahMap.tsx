@@ -1,3 +1,4 @@
+/* src/components/UtahMap.tsx */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
@@ -6,7 +7,7 @@ import {
   MapContainer,
   TileLayer,
   Marker,
-  Tooltip,
+  Popup,
   useMap,
 } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
@@ -16,7 +17,7 @@ import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
-// Fix marker icons
+// Patch default icon paths for modern bundlers
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -24,6 +25,14 @@ L.Icon.Default.mergeOptions({
   iconUrl: markerIcon.src,
   shadowUrl: markerShadow.src,
 });
+
+interface Company {
+  id: string;
+  name: string;
+  hq_lat: number;
+  hq_lon: number;
+  website: string | null;
+}
 
 function ResizeFixer() {
   const map = useMap();
@@ -33,11 +42,7 @@ function ResizeFixer() {
   return null;
 }
 
-export default function UtahMap({
-  companies,
-}: {
-  companies: { id: string; name: string; hq_lat: number; hq_lon: number }[];
-}) {
+export default function UtahMap({ companies }: { companies: Company[] }) {
   const center: LatLngExpression = [39.5, -111.5];
 
   return (
@@ -48,16 +53,34 @@ export default function UtahMap({
       style={{ height: '100%', width: '100%' }}
     >
       <ResizeFixer />
+
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution="© OpenStreetMap contributors"
       />
+
       {companies.map((c) => (
-        <Marker
-          key={c.id}
-          position={[c.hq_lat, c.hq_lon] as LatLngExpression}
-        >
-          <Tooltip>{c.name}</Tooltip>
+        <Marker key={c.id} position={[c.hq_lat, c.hq_lon] as LatLngExpression}>
+          <Popup
+            closeButton
+            closeOnClick={false}
+            autoClose={false}
+            className="text-center"
+          >
+            <strong>{c.name}</strong>
+            {c.website && (
+              <p style={{ margin: '0.5rem 0 0' }}>
+                <a
+                  href={c.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#0066cc', textDecoration: 'underline' }}
+                >
+                  {c.website}
+                </a>
+              </p>
+            )}
+          </Popup>
         </Marker>
       ))}
     </MapContainer>
