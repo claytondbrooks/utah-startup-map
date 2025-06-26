@@ -1,11 +1,10 @@
+// src/app/page.tsx
 'use client';
 
 import dynamic from 'next/dynamic';
 
-// Import the client-only wrapper, not UtahMap directly
-const MapWrapper = dynamic(() => import('@/components/MapWrapper'), {
-  ssr: false,
-});
+// Dynamically load the client-only MapWrapper
+const MapWrapper = dynamic(() => import('@/components/MapWrapper'), { ssr: false });
 
 export default function Home() {
   return (
@@ -18,17 +17,17 @@ export default function Home() {
         boxSizing: 'border-box',
       }}
     >
-      {/* Title */}
+      {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <h1 style={{ fontSize: '2.5rem', fontWeight: 700, margin: 0 }}>
           Utah Startup Map
         </h1>
         <p style={{ fontSize: '1.125rem', color: '#4A5568', marginTop: '0.5rem' }}>
-          Explore Utah’s tech startup ecosystem. Hover map markers for info.
+          Explore Utah’s startup ecosystem. Hover over map markers for info.
         </p>
       </div>
 
-      {/* Centered Map */}
+      {/* Map Container */}
       <div
         style={{
           width: '100%',
@@ -37,7 +36,6 @@ export default function Home() {
           margin: '0 auto',
         }}
       >
-        {/* Use MapWrapper here */}
         <MapWrapper />
       </div>
     </main>
