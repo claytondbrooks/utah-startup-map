@@ -1,4 +1,3 @@
-/* src/components/UtahMap.tsx */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
@@ -12,27 +11,19 @@ import {
 } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { Company } from '../types';    // ← same shared type
 
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
-// Patch default icon paths for modern bundlers
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// Patch default icons
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x.src,
   iconUrl: markerIcon.src,
   shadowUrl: markerShadow.src,
 });
-
-interface Company {
-  id: string;
-  name: string;
-  hq_lat: number;
-  hq_lon: number;
-  website: string | null;
-}
 
 function ResizeFixer() {
   const map = useMap();
@@ -49,7 +40,7 @@ export default function UtahMap({ companies }: { companies: Company[] }) {
     <MapContainer
       center={center}
       zoom={7}
-      scrollWheelZoom={true}
+      scrollWheelZoom
       style={{ height: '100%', width: '100%' }}
     >
       <ResizeFixer />

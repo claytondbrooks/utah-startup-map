@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import { Company } from './types';
+import { Company } from '../types';
 import UtahMap from './UtahMap';
 
 export default function MapWrapper() {
